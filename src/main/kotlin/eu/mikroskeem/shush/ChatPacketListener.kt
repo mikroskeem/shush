@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser
 /**
  * @author Mark Vainomaa
  */
-class ChatPacketListener(plugin: Shush?) : PacketAdapter(plugin, PacketType.Play.Server.CHAT) {
+class ChatPacketListener(private val shush: Shush) : PacketAdapter(shush, PacketType.Play.Server.CHAT) {
     override fun onPacketSending(e: PacketEvent) {
         val player = e.player
         val world = player.location.world.name
@@ -16,14 +16,14 @@ class ChatPacketListener(plugin: Shush?) : PacketAdapter(plugin, PacketType.Play
 
         /* Do checks */
         var worldFound = false
-        Shush.messageBlacklist.keys.forEach { worldName ->
+        shush.messageBlacklist.keys.forEach { worldName ->
             if(!e.isCancelled && !worldFound && worldName.contains(world)) {
                 worldFound = true
-                Shush.messageBlacklist[world]?.forEach { entry ->
-                    val obj : JSONObject = JSONParser().parse(component?.json!!) as JSONObject
+                shush.messageBlacklist[world]?.forEach { entry ->
+                    val obj = JSONParser().parse(component?.json!!) as JSONObject
                     val text = obj["text"] as String
                     if(text.contains(entry)) {
-                        if(Shush.debug) plugin.logger.info("'%s' matched '%s'".format(component.json, entry))
+                        if(shush.debug) shush.logger.info("'%s' matched '%s'".format(component.json, entry))
                         e.isCancelled = true
                     }
                 }

@@ -9,27 +9,19 @@ import org.bukkit.plugin.java.JavaPlugin
  * @author Mark Vainomaa
  */
 class Shush : JavaPlugin() {
-    companion object {
-        var instance : Shush? = null
-            private set
+    val messageBlacklist : MutableMap<String, List<String>> = HashMap()
 
-        var debug = false
-
-        var listener : ChatPacketListener? = null
-            private set
-
-        val messageBlacklist : MutableMap<String, List<String>> = HashMap()
-    }
+    var debug = false
+    var listener : ChatPacketListener? = null
+        private set
 
     override fun onEnable() {
-
         logger.info("Enabling plugin...")
         if(!server.pluginManager.isPluginEnabled("ProtocolLib")) {
             logger.severe("ProtocolLib is not enabled!")
             isEnabled = false
             return
         }
-        instance = this
 
         /* Process configuration */
         debug = config.getBoolean("debug", false)
@@ -47,7 +39,6 @@ class Shush : JavaPlugin() {
     }
 
     override fun onDisable() {
-        if(instance == null) return
         logger.info("Stopping packet listener...")
         ProtocolLibrary.getProtocolManager().
                 removePacketListener(listener)
