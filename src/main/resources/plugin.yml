@@ -1,0 +1,5 @@
+name: Shush
+description: Filter out chat messages in some worlds
+author: mikroskeem
+version: ${project.version}
+main: eu.mikroskeem.shush.Shush

@@ -1,0 +1,4 @@
+# Shush configuration
+debug: false
+worlds:
+  world: []
